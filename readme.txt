@@ -20,8 +20,8 @@
 
 
 4. What classmates or other individuals did you consult as part of this assignment? What did you discuss?
-
+No one
 
 
 5. Is there anything special we need to know in order to run your code?
-
+Nope
