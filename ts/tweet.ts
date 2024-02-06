@@ -36,10 +36,19 @@ class Tweet {
     }
 
     get writtenText():string {
-        if(!this.written) {
-            return "";
-        }
         //TODO: parse the written text from the tweet
+        if (this.written) {
+            const possibleEndings = ["check it out!", "#rklive"];
+            let userTextStart = this.text.length;
+
+            for (const ending of possibleEndings) {
+                const index = this.text.indexOf(ending);
+                if (index !== -1) {
+                    userTextStart = Math.min(userTextStart, index + ending.length + 1);
+                }
+            }
+            return userTextStart < this.text.length ? this.text.substring(userTextStart).trim() : "No user-written text identified.";
+        }
         return "";
     }
 
@@ -48,7 +57,25 @@ class Tweet {
             return "unknown";
         }
         //TODO: parse the activity type from the text of the tweet
-        return "";
+        const activityPattern = {
+            run: /\brun\b/i,
+            walk: /\bwalk\b/i,
+            spinning: /\bspinning\b/i,
+            ski: /\bski\b/i,
+            swim: /\bswim\b/i,
+            hike: /\bhike\b/i,
+            bike: /\bbike\b/i,
+            elliptical: /\belliptical\b/i,
+            yoga: /\byoga\b/i,
+        };
+
+        for (const [activity, regex] of Object.entries(activityPattern)) {
+            if (regex.test(this.text)) {
+                return activity;
+            }
+        }
+        
+        return "unknown";
     }
 
     get distance():number {
@@ -56,6 +83,18 @@ class Tweet {
             return 0;
         }
         //TODO: prase the distance from the text of the tweet
+        const distanceRegex = /(\d+(\.\d+)?)\s*(km|miles)\b/i;
+        const match = this.text.match(distanceRegex);
+
+        if (match) {
+            let distance = parseFloat(match[1]);
+            const unit = match[3];
+
+            if (unit.toLowerCase() === 'km') {
+                distance *= 0.621371;
+            }
+            return distance;
+        }
         return 0;
     }
 
