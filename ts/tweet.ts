@@ -54,16 +54,29 @@ class Tweet {
 
     get activityType():string {
         //TODO: parse the activity type from the text of the tweet
-        if (this.source !== 'completed_event') {
-            return "unknown";
-        }
-        const activityKeywords = ["run", "walk", "swim", "hike", "bike", "yoga", "ski", "elliptical", "spinning"];
-        for (const keyword of activityKeywords) {
-            if (this.text.toLowerCase().includes(keyword)) {
-                return keyword;
+        const patterns = [
+            {keyword: 'run', regex: /\brun\b/ },
+            {keyword: 'walk', regex: /\bwalk\b/ },
+            {keyword: 'bike', regex: /\bbike\b/ },
+            {keyword: 'elliptical', regex: /\belliptical\b/ },
+            {keyword: 'swim', regex: /\bswim\b/ },
+            {keyword: 'spinning', regex: /\bspinning\b/ },
+            {keyword: 'yoga', regex: /\byoga\b/ },
+            {keyword: 'hike', regex: /\bhike\b/ },
+            {keyword: 'circuit', regex: /\bcircuit\b/ },
+            {keyword: 'group', regex: /\bgroup\b/ },
+            {keyword: 'bootcamp', regex: /\bbootcamp\b/ },
+            {keyword: 'sprint', regex: /\bsprint\b/ }
+        ];
+
+        const textLower = this.text.toLowerCase();
+    
+        for (const pattern of patterns) {
+            if (textLower.search(pattern.regex) !== -1) {
+                return pattern.keyword;
             }
         }
-    
+
         return "unknown";
     }
 
@@ -90,8 +103,13 @@ class Tweet {
 
     getHTMLTableRow(rowNumber:number):string {
         //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
-        // Construct table row; adjust based on required fields
-        return `<tr>
-                </tr>`;
-    }
+        const linkRegex = /https:\/\/t\.co\/[a-zA-Z0-9]+/g; 
+        const linkedText = this.text.replace(linkRegex, (match) => `<a href="${match}" target="_blank">${match}</a>`);
+
+            return `<tr>
+                <td>${rowNumber}</td>
+                <td>${this.activityType}</td>
+                <td>${linkedText}</td>
+            </tr>`;
+}
 }
