@@ -1,5 +1,12 @@
 let filteredTweets = [];
 
+function linkify(tweetText) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g; 
+    return tweetText.replace(urlRegex, function(url) {
+        return '<a href="' + url + '" target="_blank">' + url + '</a>'; 
+    });
+}
+
 function parseTweets(runkeeper_tweets) {
 	//Do not proceed if no tweets loaded
 	if(runkeeper_tweets === undefined) {
@@ -46,7 +53,7 @@ function addEventHandlerForSearch() {
 
             cell1.textContent = index + 1;
             cell2.textContent = tweet.activityType; 
-            cell3.innerHTML = tweet.text; 
+            cell3.innerHTML = linkify(tweet.text); 
         });
     });
 }
