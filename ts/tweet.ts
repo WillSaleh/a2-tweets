@@ -13,9 +13,9 @@ class Tweet {
         const text = this.text.toLowerCase();
 
         if (text.startsWith("just completed") || text.startsWith("just posted")) {
-            return 'completedEvents';
+            return 'completed_events';
         } else if (text.startsWith("watch") && text.includes("#rklive")) {
-            return 'liveEvents';
+            return 'live_events';
         } else if (text.startsWith("achieved") && text.includes("#fitnessalerts")) {
             return 'achievements';
         } else {
@@ -53,28 +53,17 @@ class Tweet {
     }
 
     get activityType():string {
-        if (this.source != 'completed_event') {
+        //TODO: parse the activity type from the text of the tweet
+        if (this.source !== 'completed_event') {
             return "unknown";
         }
-        //TODO: parse the activity type from the text of the tweet
-        const activityPattern = {
-            run: /\brun\b/i,
-            walk: /\bwalk\b/i,
-            spinning: /\bspinning\b/i,
-            ski: /\bski\b/i,
-            swim: /\bswim\b/i,
-            hike: /\bhike\b/i,
-            bike: /\bbike\b/i,
-            elliptical: /\belliptical\b/i,
-            yoga: /\byoga\b/i,
-        };
-
-        for (const [activity, regex] of Object.entries(activityPattern)) {
-            if (regex.test(this.text)) {
-                return activity;
+        const activityKeywords = ["run", "walk", "swim", "hike", "bike", "yoga", "ski", "elliptical", "spinning"];
+        for (const keyword of activityKeywords) {
+            if (this.text.toLowerCase().includes(keyword)) {
+                return keyword;
             }
         }
-        
+    
         return "unknown";
     }
 
@@ -83,23 +72,26 @@ class Tweet {
             return 0;
         }
         //TODO: prase the distance from the text of the tweet
-        const distanceRegex = /(\d+(\.\d+)?)\s*(km|miles)\b/i;
-        const match = this.text.match(distanceRegex);
+        const distancePattern = /(\d+(\.\d+)?)\s?(mi|km)/;
+        const match = this.text.match(distancePattern);
 
         if (match) {
             let distance = parseFloat(match[1]);
             const unit = match[3];
 
-            if (unit.toLowerCase() === 'km') {
+            if (unit === 'km') {
                 distance *= 0.621371;
             }
             return distance;
         }
+
         return 0;
     }
 
     getHTMLTableRow(rowNumber:number):string {
         //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
-        return "<tr></tr>";
+        // Construct table row; adjust based on required fields
+        return `<tr>
+                </tr>`;
     }
 }

@@ -36,8 +36,8 @@ function parseTweets(runkeeper_tweets) {
     }
 
 	let counters = {
-		completedEvents: 0,
-		liveEvents: 0,
+		completed_events: 0,
+		live_events: 0,
 		achievements: 0,
 		miscellaneous: 0,
 		written: 0
@@ -45,23 +45,23 @@ function parseTweets(runkeeper_tweets) {
 
 	tweet_array.forEach(tweet => {
 		counters[tweet.source]++;
-		if (tweet.source === 'completedEvents' && tweet.written) counters.written++;
+		if (tweet.source === 'completed_events' && tweet.written) counters.written++;
 	});
 
 
-	document.querySelectorAll('.completedEvents').forEach(element => element.textContent = counters.completedEvents);
-    document.querySelector('.liveEvents').textContent = counters.liveEvents;
+	document.querySelectorAll('.completedEvents').forEach(element => element.textContent = counters.completed_events);
+    document.querySelector('.liveEvents').textContent = counters.live_events;
     document.querySelector('.achievements').textContent = counters.achievements;
     document.querySelector('.miscellaneous').textContent = counters.miscellaneous;
 
 	let totalTweets = tweet_array.length;
-    document.querySelector('.completedEventsPct').textContent = ((counters.completedEvents / totalTweets) * 100).toFixed(2) + '%';
-    document.querySelector('.liveEventsPct').textContent = ((counters.liveEvents / totalTweets) * 100).toFixed(2) + '%';
+    document.querySelector('.completedEventsPct').textContent = ((counters.completed_events / totalTweets) * 100).toFixed(2) + '%';
+    document.querySelector('.liveEventsPct').textContent = ((counters.live_events / totalTweets) * 100).toFixed(2) + '%';
     document.querySelector('.achievementsPct').textContent = ((counters.achievements / totalTweets) * 100).toFixed(2) + '%';
     document.querySelector('.miscellaneousPct').textContent = ((counters.miscellaneous / totalTweets) * 100).toFixed(2) + '%';
     
 
-	let completedWithTextPct = (counters.written / counters.completedEvents) * 100;
+	let completedWithTextPct = (counters.written / counters.completed_events) * 100;
     document.querySelector('.written').textContent = counters.written;
     document.querySelector('.writtenPct').textContent = completedWithTextPct.toFixed(2) + '%';
 }
